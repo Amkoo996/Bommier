@@ -12,7 +12,7 @@ import { FloatingActions } from '../src/components/layout/FloatingActions';
 import { CookieConsent } from '../src/components/common/CookieConsent';
 import { NewsletterPopup } from '../src/components/common/NewsletterPopup';
 
-// Omotač koji povezuje korpu sa Next.js ruterom za checkout
+// Omotač koji povezuje korpu sa ruterom za checkout
 function CartDrawerWithRouter() {
   const router = useRouter();
   const { setIsCartOpen } = useCart();
@@ -30,14 +30,13 @@ function CartDrawerWithRouter() {
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   
-  // Provjeravamo da li je korisnik trenutno na admin ruti
+  // Provjera za admin panel kako bismo sakrili korisnički UI
   const isAdminRoute = pathname?.startsWith('/admin');
 
   return (
     <AuthProvider>
       <CartProvider>
         <WishlistProvider>
-          {/* Prikazuj elemente trgovine SAMO ako nismo u admin panelu */}
           {!isAdminRoute && <Navbar />}
           {!isAdminRoute && <CartDrawerWithRouter />}
           

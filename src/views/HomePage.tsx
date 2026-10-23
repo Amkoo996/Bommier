@@ -26,7 +26,6 @@ export const HomePage = () => {
         
         setFeaturedProducts(activeProds.filter(p => p.featured).slice(0, 4));
         
-        // Sortiranje novih artikala po datumu dodavanja (najnoviji prvi)
         setNewDropProducts(
           activeProds
             .filter(p => p.isNew)
@@ -34,7 +33,6 @@ export const HomePage = () => {
             .slice(0, 4)
         );
 
-        // Dinamičko povlačenje slike dodatka koji je aktivan i ima zalihe na stanju
         const accessoryProd = activeProds.find(p => {
           if (p.category !== 'Dodaci (Accessories)') return false;
           const totalStock = Object.values(p.sizes || {}).reduce((sum, val) => sum + (val as number), 0);
@@ -96,36 +94,36 @@ export const HomePage = () => {
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-start justify-center">
           
           <h1 className="text-white font-['Poppins'] text-5xl sm:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.9] mb-6 max-w-2xl">
-            Ulična<br/>pravila.<br/><span className="text-[#F7E97F]">Tvoj stil.</span>
+            Bezvremenska<br/>Elegancija.<br/><span className="text-[#C4A484]">Vaš potpis.</span>
           </h1>
           <p className="text-neutral-300 text-sm sm:text-base max-w-md mb-8 font-medium">
-            Premium streetwear komadi dizajnirani za svaki dan. 100% premium pamuk. Beskompromisan kvalitet.
+            Ekskluzivni komadi beskompromisnog dizajna. Definicija modernog luksuza i premium kvalitete.
           </p>
           <Link 
             href="/shop" 
-            className="group flex items-center gap-3 bg-[#F7E97F] text-[#0A0A0A] px-8 py-4 font-['Poppins'] font-black uppercase tracking-widest text-sm sm:text-base transition-all hover:bg-white hover:scale-105 active:scale-95"
+            className="group flex items-center gap-3 bg-[#C4A484] text-[#0A0A0A] px-8 py-4 font-['Poppins'] font-black uppercase tracking-widest text-sm sm:text-base transition-all hover:bg-white hover:scale-105 active:scale-95"
           >
-            Otkrij kolekciju
+            Istraži kolekciju
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </section>
 
       {/* 2. TRAKA POVJERENJA */}
-      <section className="bg-[#0A0A0A] border-b-4 border-[#F7E97F] py-4 sm:py-6">
+      <section className="bg-[#0A0A0A] border-b-4 border-[#C4A484] py-4 sm:py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-neutral-800 text-center">
             <div className="flex items-center justify-center gap-3 pt-4 sm:pt-0">
-              <Truck className="w-6 h-6 text-[#F7E97F]" />
-              <span className="text-white font-['Poppins'] font-bold text-xs uppercase tracking-wider">Dostava 48-72h</span>
+              <Truck className="w-6 h-6 text-[#C4A484]" />
+              <span className="text-white font-['Poppins'] font-bold text-xs uppercase tracking-wider">Premium Dostava 48h</span>
             </div>
             <div className="flex items-center justify-center gap-3 pt-4 sm:pt-0">
-              <ShieldCheck className="w-6 h-6 text-[#F7E97F]" />
-              <span className="text-white font-['Poppins'] font-bold text-xs uppercase tracking-wider">Plaćanje pouzećem</span>
+              <ShieldCheck className="w-6 h-6 text-[#C4A484]" />
+              <span className="text-white font-['Poppins'] font-bold text-xs uppercase tracking-wider">Sigurna kupovina</span>
             </div>
             <div className="flex items-center justify-center gap-3 pt-4 sm:pt-0">
-              <RotateCcw className="w-6 h-6 text-[#F7E97F]" />
-              <span className="text-white font-['Poppins'] font-bold text-xs uppercase tracking-wider">Zamjena unutar 3 dana</span>
+              <RotateCcw className="w-6 h-6 text-[#C4A484]" />
+              <span className="text-white font-['Poppins'] font-bold text-xs uppercase tracking-wider">Povrat unutar 14 dana</span>
             </div>
           </div>
         </div>
@@ -139,7 +137,7 @@ export const HomePage = () => {
             <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
             <div className="absolute bottom-6 left-6">
               <h2 className="text-white font-['Poppins'] text-3xl font-black uppercase tracking-widest mb-2 drop-shadow-lg">Duksevi</h2>
-              <span className="text-white text-xs font-bold uppercase tracking-wider border-b-2 border-[#F7E97F] pb-1">Istraži modele</span>
+              <span className="text-white text-xs font-bold uppercase tracking-wider border-b-2 border-[#C4A484] pb-1">Istraži modele</span>
             </div>
           </Link>
           
@@ -149,11 +147,10 @@ export const HomePage = () => {
               <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
               <div className="absolute bottom-6 left-6">
                 <h2 className="text-white font-['Poppins'] text-2xl font-black uppercase tracking-widest mb-2 drop-shadow-lg">Majice</h2>
-                <span className="text-white text-xs font-bold uppercase tracking-wider border-b-2 border-[#F7E97F] pb-1">Vidi ponudu</span>
+                <span className="text-white text-xs font-bold uppercase tracking-wider border-b-2 border-[#C4A484] pb-1">Vidi ponudu</span>
               </div>
             </Link>
 
-            {/* DODACI: Dinamički prikazuje sliku artikla koji je na stanju */}
             <Link href="/shop?category=Dodaci%20(Accessories)" className="relative group overflow-hidden bg-neutral-200">
               <img 
                 src={accessoryImage || "/images/category-tshirt.webp"} 
@@ -164,8 +161,8 @@ export const HomePage = () => {
               
               <div className="absolute bottom-6 left-6 z-10">
                 <h2 className="text-white font-['Poppins'] text-2xl font-black uppercase tracking-widest mb-1 drop-shadow-lg">Dodaci</h2>
-                <p className="text-[#F7E97F] text-[10px] font-bold uppercase tracking-widest mb-2 drop-shadow-md">Privjesci • Stikeri • Kape</p>
-                <span className="text-neutral-200 text-xs font-bold uppercase tracking-wider border-b-2 border-[#F7E97F] pb-0.5 group-hover:text-white transition-colors">Pregledaj ponudu</span>
+                <p className="text-[#C4A484] text-[10px] font-bold uppercase tracking-widest mb-2 drop-shadow-md">Ekskluzivni detalji</p>
+                <span className="text-neutral-200 text-xs font-bold uppercase tracking-wider border-b-2 border-[#C4A484] pb-0.5 group-hover:text-white transition-colors">Pregledaj ponudu</span>
               </div>
             </Link>
           </div>
@@ -178,8 +175,8 @@ export const HomePage = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-end mb-8">
               <div>
-                <span className="text-[#0A0A0A] font-['Poppins'] font-black uppercase tracking-widest text-[10px] bg-[#F7E97F] px-2 py-0.5 mb-2 inline-block">Najbolje od nas</span>
-                <h2 className="text-3xl font-black uppercase font-['Poppins'] text-black tracking-tight">Najtraženije</h2>
+                <span className="text-[#0A0A0A] font-['Poppins'] font-black uppercase tracking-widest text-[10px] bg-[#C4A484] px-2 py-0.5 mb-2 inline-block">Ekskluzivan odabir</span>
+                <h2 className="text-3xl font-black uppercase font-['Poppins'] text-black tracking-tight">Kolekcija</h2>
               </div>
               <Link href="/shop" className="text-xs font-bold uppercase text-neutral-500 hover:text-black transition-colors hidden sm:block border-b border-black pb-0.5">
                 Vidi sve →
@@ -188,7 +185,7 @@ export const HomePage = () => {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {featuredProducts.map((product) => (
-                <Link key={product.id} href={`/proizvod?id=${product.id}`} className="group relative block bg-[#FAF9F5] border-2 border-transparent hover:border-black transition-colors shadow-sm">
+                <Link key={product.id} href={`/proizvod?id=${product.id}`} className="group relative block bg-[#FAF9F5] border-2 border-transparent hover:border-[#C4A484] transition-colors shadow-sm">
                   <div className="aspect-[4/5] overflow-hidden bg-neutral-100">
                     <img src={product.images?.[0] || '/hero-streetwear.webp'} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   </div>
@@ -208,14 +205,14 @@ export const HomePage = () => {
       {!loading && newDropProducts.length > 0 && (
         <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center mb-10 text-center">
-            <span className="bg-[#0A0A0A] text-white px-3 py-1 font-['Poppins'] text-[10px] font-black uppercase tracking-[0.2em] mb-3">Fresh out the oven</span>
-            <h2 className="text-4xl font-black uppercase font-['Poppins'] text-black tracking-tight">Novi Drop</h2>
+            <span className="bg-[#0A0A0A] text-white px-3 py-1 font-['Poppins'] text-[10px] font-black uppercase tracking-[0.2em] mb-3">Samo za odabrane</span>
+            <h2 className="text-4xl font-black uppercase font-['Poppins'] text-black tracking-tight">Noviteti</h2>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {newDropProducts.map((product) => (
-              <Link key={product.id} href={`/proizvod?id=${product.id}`} className="group relative block border-2 border-neutral-200 hover:border-black transition-colors shadow-sm">
-                <span className="absolute top-2 left-2 z-10 bg-[#0A0A0A] text-[#F7E97F] text-[9px] font-black uppercase px-2 py-1 tracking-widest shadow-md">
+              <Link key={product.id} href={`/proizvod?id=${product.id}`} className="group relative block border-2 border-neutral-200 hover:border-[#C4A484] transition-colors shadow-sm">
+                <span className="absolute top-2 left-2 z-10 bg-[#0A0A0A] text-[#C4A484] text-[9px] font-black uppercase px-2 py-1 tracking-widest shadow-md">
                   NOVO
                 </span>
                 <div className="aspect-[4/5] overflow-hidden bg-white">
@@ -232,49 +229,49 @@ export const HomePage = () => {
       )}
 
       {/* 6. NEWSLETTER SEKCIJA */}
-      <section className="bg-[#0A0A0A] border-t-4 border-[#F7E97F] py-16 sm:py-20 text-white">
+      <section className="bg-[#0A0A0A] border-t-4 border-[#C4A484] py-16 sm:py-20 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#1A1A1A] text-[#F7E97F] border border-neutral-800 mb-4">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#1A1A1A] text-[#C4A484] border border-neutral-800 mb-4">
             <Mail className="w-6 h-6" />
           </div>
 
           <div>
-            <span className="text-[#0A0A0A] font-['Poppins'] font-black uppercase tracking-widest text-[10px] bg-[#F7E97F] px-2.5 py-1 mb-3 inline-block">
-              BUDI DIO EKIPE
+            <span className="text-[#0A0A0A] font-['Poppins'] font-black uppercase tracking-widest text-[10px] bg-[#C4A484] px-2.5 py-1 mb-3 inline-block">
+              BOMMIER KLUB
             </span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl font-black uppercase font-['Poppins'] tracking-tight mb-3">
-            Ne propusti novi drop
+            Pristupite limitiranim edicijama
           </h2>
 
           <p className="text-neutral-400 text-xs sm:text-sm max-w-lg mx-auto mb-8 font-medium">
-            Prijavi se na newsletter i saznaj prvi za nove streetwear kolekcije, ograničene zalihe i ekskluzivne pogodnosti.
+            Pretplatite se na naš newsletter i osigurajte sebi prvi pristup najnovijim kolekcijama, tajnim rasprodajama i posebnim privilegijama za članove.
           </p>
 
           <form onSubmit={handleSubscribe} className="max-w-md mx-auto flex flex-col sm:flex-row gap-2">
             <input
               type="email"
               required
-              placeholder="Unesite Vaš e-mail..."
+              placeholder="Unesite Vašu e-mail adresu..."
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={subLoading || subSuccess}
-              className="flex-1 bg-[#141414] border-2 border-neutral-700 focus:border-[#F7E97F] px-4 py-3 text-xs sm:text-sm text-white placeholder-neutral-500 focus:outline-none transition-colors"
+              className="flex-1 bg-[#141414] border-2 border-neutral-700 focus:border-[#C4A484] px-4 py-3 text-xs sm:text-sm text-white placeholder-neutral-500 focus:outline-none transition-colors"
             />
             <button
               type="submit"
               disabled={subLoading || subSuccess}
-              className="bg-[#F7E97F] text-[#0A0A0A] hover:bg-white px-6 py-3 font-['Poppins'] font-black uppercase text-xs sm:text-sm tracking-wider transition-all disabled:opacity-50 cursor-pointer shrink-0"
+              className="bg-[#C4A484] text-[#0A0A0A] hover:bg-white px-6 py-3 font-['Poppins'] font-black uppercase text-xs sm:text-sm tracking-wider transition-all disabled:opacity-50 cursor-pointer shrink-0"
             >
-              {subLoading ? 'Prijava...' : 'Prijavi se'}
+              {subLoading ? 'Prijava...' : 'Prijavite se'}
             </button>
           </form>
 
           {subSuccess && (
             <div className="mt-4 flex items-center justify-center gap-2 text-emerald-400 text-xs sm:text-sm font-bold">
               <CheckCircle2 className="w-4 h-4" />
-              <span>Uspješno ste se pretplatili! Hvala na povjerenju.</span>
+              <span>Uspješno ste prijavljeni. Hvala Vam na povjerenju.</span>
             </div>
           )}
 
