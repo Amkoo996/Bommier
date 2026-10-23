@@ -5,7 +5,6 @@ import './globals.css';
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID;
 
-// ISPRAVLJENO P2-3: Uklonjen maximumScale: 1 kako bi korisnici na mobitelima mogli zumirati stranicu (WCAG Pristupačnost)
 export const viewport: Viewport = {
   themeColor: '#0A0A0A',
   width: 'device-width',
@@ -13,9 +12,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://casualshop.ba'),
-  title: 'Casual Shop BiH • Autentični Streetwear',
-  description: 'Urbana streetwear odjeća vrhunskog kvaliteta. Plaćanje pouzećem i brza dostava širom Bosne i Hercegovine.',
+  metadataBase: new URL('https://bommier.ba'), // Zamijenite sa stvarnom domenom
+  title: 'Bommier Wear • Bezvremenska elegancija',
+  description: 'Ekskluzivni komadi beskompromisnog dizajna. Definicija modernog luksuza i premium kvalitete.',
   manifest: '/manifest.json',
   icons: {
     icon: [
@@ -29,19 +28,19 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Casual Shop',
+    title: 'Bommier Wear',
   },
   openGraph: {
-    title: 'Casual Shop BiH • Autentični Streetwear',
-    description: 'Urbana streetwear odjeća vrhunskog kvaliteta. Plaćanje pouzećem i brza dostava širom Bosne i Hercegovine.',
-    url: 'https://casualshop.ba',
-    siteName: 'Casual Shop BiH',
+    title: 'Bommier Wear • Bezvremenska elegancija',
+    description: 'Ekskluzivni komadi beskompromisnog dizajna. Definicija modernog luksuza i premium kvalitete.',
+    url: 'https://bommier.ba',
+    siteName: 'Bommier Wear',
     images: [
       {
-        url: '/images/seo-cover.webp',
+        url: '/images/seo-cover.webp', // Obavezno zamijeniti sliku u folderu novom premium fotografijom
         width: 1200,
         height: 630,
-        alt: 'Casual Shop BiH Kolekcija',
+        alt: 'Bommier Wear Kolekcija',
       },
     ],
     locale: 'bs_BA',
@@ -49,8 +48,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Casual Shop BiH • Autentični Streetwear',
-    description: 'Urbana streetwear odjeća vrhunskog kvaliteta. Plaćanje pouzećem i brza dostava širom Bosne i Hercegovine.',
+    title: 'Bommier Wear • Bezvremenska elegancija',
+    description: 'Ekskluzivni komadi beskompromisnog dizajna. Definicija modernog luksuza i premium kvalitete.',
     images: ['/images/seo-cover.webp'],
   },
 };
@@ -65,6 +64,7 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Fontovi zadržani za sada, možemo ih promijeniti u globals.css ili ovdje ako želite serifni font */}
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@700;800;900&display=swap"
@@ -72,7 +72,7 @@ export default function RootLayout({
       </head>
       <body className="bg-[#FAF9F5] text-neutral-900 antialiased font-['Inter']">
         
-        {/* ISPRAVLJENO P1-4: GOOGLE ANALYTICS INTEGRACIJA SA CONSENT MODE (Zadano isključeno) */}
+        {/* GOOGLE ANALYTICS INTEGRACIJA SA CONSENT MODE */}
         {GA_MEASUREMENT_ID && (
           <>
             <Script
@@ -83,7 +83,6 @@ export default function RootLayout({
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 
-                // Zabrana praćenja prije nego što korisnik klikne "Prihvatam" na banneru
                 gtag('consent', 'default', {
                   'analytics_storage': 'denied',
                   'ad_storage': 'denied',
