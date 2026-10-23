@@ -117,22 +117,22 @@ export const ShopPage: React.FC<ShopPageProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 font-['Inter']">
       {/* Naslov Kataloga */}
-      <div className="mb-8 bg-[#0A0A0A] text-white p-6 sm:p-10 border-b-4 border-[#F7E97F] shadow-xl relative overflow-hidden">
+      <div className="mb-8 bg-[#0A0A0A] text-white p-6 sm:p-10 border-b-4 border-[#C4A484] shadow-xl relative overflow-hidden">
         <div className="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
           <ShoppingBag className="w-64 h-64 text-white" />
         </div>
         
         <div className="relative z-10">
           <div className="flex items-center gap-2 mb-2">
-            <span className="bg-[#F7E97F] text-[#0A0A0A] text-[10px] font-['Poppins'] font-black uppercase tracking-[0.2em] px-2.5 py-0.5">
+            <span className="bg-[#C4A484] text-[#0A0A0A] text-[10px] font-['Poppins'] font-black uppercase tracking-[0.2em] px-2.5 py-0.5">
               KATALOG
             </span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white font-['Poppins']">
-            STREETWEAR KOLEKCIJA
+            EKSKLUZIVNA KOLEKCIJA
           </h1>
           <p className="text-xs sm:text-sm text-neutral-300 mt-2 max-w-xl font-['Inter'] leading-relaxed">
-            Kompletna ponuda muške i uniseks ulične odjeće. Pronađite savršenu veličinu i kroj uz brzu dostavu u BiH.
+            Otkrijte našu ponudu premium komada beskompromisnog dizajna. Pronađite savršen kroj uz brzu i sigurnu dostavu.
           </p>
         </div>
 
@@ -140,14 +140,14 @@ export const ShopPage: React.FC<ShopPageProps> = ({
         {hasActiveFilters && (
           <div className="mt-6 flex flex-wrap items-center gap-2 pt-4 border-t border-neutral-800">
             <span className="text-[11px] font-['Poppins'] font-bold uppercase text-neutral-400 mr-1 flex items-center gap-1">
-              <SlidersHorizontal className="w-3.5 h-3.5 text-[#F7E97F]" />
+              <SlidersHorizontal className="w-3.5 h-3.5 text-[#C4A484]" />
               <span>Aktivno:</span>
             </span>
 
             {selectedCategory !== 'Sve' && (
               <button
                 onClick={() => setSelectedCategory('Sve')}
-                className="inline-flex items-center gap-1.5 bg-[#F7E97F] text-[#0A0A0A] text-[11px] font-['Poppins'] font-black uppercase px-3 py-1 hover:bg-white transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 bg-[#C4A484] text-[#0A0A0A] text-[11px] font-['Poppins'] font-black uppercase px-3 py-1 hover:bg-white transition-colors cursor-pointer"
               >
                 <span>Kategorija: {selectedCategory}</span>
                 <X className="w-3.5 h-3.5" />
@@ -157,7 +157,7 @@ export const ShopPage: React.FC<ShopPageProps> = ({
             {selectedSize !== '' && (
               <button
                 onClick={() => setSelectedSize('')}
-                className="inline-flex items-center gap-1.5 bg-[#F7E97F] text-[#0A0A0A] text-[11px] font-['Poppins'] font-black uppercase px-3 py-1 hover:bg-white transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 bg-[#C4A484] text-[#0A0A0A] text-[11px] font-['Poppins'] font-black uppercase px-3 py-1 hover:bg-white transition-colors cursor-pointer"
               >
                 <span>Veličina: {selectedSize}</span>
                 <X className="w-3.5 h-3.5" />
@@ -167,7 +167,7 @@ export const ShopPage: React.FC<ShopPageProps> = ({
             {priceRange < maxProductPrice && (
               <button
                 onClick={() => setPriceRange(maxProductPrice)}
-                className="inline-flex items-center gap-1.5 bg-[#F7E97F] text-[#0A0A0A] text-[11px] font-['Poppins'] font-black uppercase px-3 py-1 hover:bg-white transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 bg-[#C4A484] text-[#0A0A0A] text-[11px] font-['Poppins'] font-black uppercase px-3 py-1 hover:bg-white transition-colors cursor-pointer"
               >
                 <span>Do {priceRange} KM</span>
                 <X className="w-3.5 h-3.5" />
@@ -175,14 +175,14 @@ export const ShopPage: React.FC<ShopPageProps> = ({
             )}
 
             {searchTerm && (
-              <span className="inline-flex items-center gap-1 bg-amber-400 text-black text-[11px] font-mono px-3 py-1 font-bold">
+              <span className="inline-flex items-center gap-1 bg-[#C4A484] text-black text-[11px] font-mono px-3 py-1 font-bold">
                 Upit: "{searchTerm}"
               </span>
             )}
 
             <button
               onClick={handleReset}
-              className="text-[11px] font-['Poppins'] font-bold uppercase text-neutral-400 hover:text-[#F7E97F] underline ml-2 cursor-pointer"
+              className="text-[11px] font-['Poppins'] font-bold uppercase text-neutral-400 hover:text-[#C4A484] underline ml-2 cursor-pointer"
             >
               Resetuj sve
             </button>
@@ -217,7 +217,7 @@ export const ShopPage: React.FC<ShopPageProps> = ({
           </p>
           <button
             onClick={handleReset}
-            className="mt-2 px-6 py-3 bg-[#0A0A0A] text-white hover:bg-[#F7E97F] hover:text-[#0A0A0A] text-xs font-['Poppins'] font-bold uppercase tracking-wider transition-all border-2 border-[#0A0A0A] cursor-pointer inline-flex items-center gap-2"
+            className="mt-2 px-6 py-3 bg-[#0A0A0A] text-white hover:bg-[#C4A484] hover:text-[#0A0A0A] text-xs font-['Poppins'] font-bold uppercase tracking-wider transition-all border-2 border-[#0A0A0A] cursor-pointer inline-flex items-center gap-2"
           >
             <RefreshCw className="w-4 h-4" />
             <span>Resetuj sve filtere</span>

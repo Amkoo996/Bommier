@@ -10,7 +10,13 @@ export function ShopPageClient({ initialProducts = [] }: { initialProducts?: Pro
   const router = useRouter();
   
   return (
-    <Suspense fallback={<div className="min-h-screen pt-24 text-center">Ucitavanje kolekcije...</div>}>
+    <Suspense 
+      fallback={
+        <div className="min-h-screen pt-32 text-center text-neutral-500 font-['Poppins'] uppercase tracking-widest text-sm animate-pulse">
+          Učitavanje kolekcije...
+        </div>
+      }
+    >
       <ShopPageContent initialProducts={initialProducts} router={router} />
     </Suspense>
   );

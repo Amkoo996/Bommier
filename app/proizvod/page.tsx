@@ -30,11 +30,24 @@ function ProductLoader() {
   }, [id]);
 
   if (state === 'loading') {
-    return <div className='min-h-screen pt-24 text-center'>Učitavanje...</div>;
+    return (
+      <div className="min-h-screen pt-32 text-center text-neutral-500 font-['Poppins'] uppercase tracking-widest text-sm animate-pulse">
+        Učitavanje detalja...
+      </div>
+    );
   }
 
   if (state === 'missing' || !product) {
-    return <div className='min-h-screen pt-24 text-center font-bold'>Proizvod nije pronađen.</div>;
+    return (
+      <div className="min-h-screen pt-32 text-center">
+        <h2 className="font-['Poppins'] text-xl font-black uppercase tracking-widest text-black mb-2">
+          Artikal nije pronađen
+        </h2>
+        <p className="text-sm text-neutral-500 font-medium">
+          Komad koji tražite više nije dostupan ili je link nevažeći.
+        </p>
+      </div>
+    );
   }
 
   return <ProductDetailPage product={product} />;
@@ -42,7 +55,13 @@ function ProductLoader() {
 
 export default function ProductPage() {
   return (
-    <Suspense fallback={<div className='min-h-screen pt-24 text-center'>Učitavanje...</div>}>
+    <Suspense 
+      fallback={
+        <div className="min-h-screen pt-32 text-center text-neutral-500 font-['Poppins'] uppercase tracking-widest text-sm animate-pulse">
+          Učitavanje...
+        </div>
+      }
+    >
       <ProductLoader />
     </Suspense>
   );

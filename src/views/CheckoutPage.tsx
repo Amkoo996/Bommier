@@ -47,7 +47,6 @@ export const CheckoutPage: React.FC<{
     settings 
   } = useCart();
 
-  // ISPRAVLJENO P1-3: Nasumični ID za napuštenu korpu umjesto predvidljivog (telefona)
   const cartSessionIdRef = useRef(`cart-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`);
 
   const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
@@ -67,7 +66,6 @@ export const CheckoutPage: React.FC<{
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [generalError, setGeneralError] = useState('');
 
-  // ISPRAVLJENO P1-3: Dodan state za pristanak na obradu podataka
   const [privacyConsent, setPrivacyConsent] = useState(false);
 
   const [promoCodeInput, setPromoCodeInput] = useState('');
@@ -86,7 +84,6 @@ export const CheckoutPage: React.FC<{
 
   const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // ISPRAVLJENO P1-3: Korpa se snima tek AKO je korisnik dao explicitan pristanak (privacyConsent)
   useEffect(() => {
     if (items.length === 0 || completedOrder || !privacyConsent) return;
 
@@ -205,7 +202,7 @@ export const CheckoutPage: React.FC<{
 
     try {
       const randomId = Math.random().toString(36).substring(2, 6).toUpperCase();
-      const orderNumber = `CS-${Date.now().toString().slice(-4)}-${randomId}`;
+      const orderNumber = `BW-${Date.now().toString().slice(-4)}-${randomId}`; // Izmijenjeno u BW-
 
       const deliveryAddressText = deliveryMethod === 'pickup' 
         ? `Lično preuzimanje Sarajevo (${formData.pickupTime})`
@@ -245,7 +242,6 @@ export const CheckoutPage: React.FC<{
       const createdOrderId = await createOrder(orderPayload);
       const fullOrderRecord: Order = { ...orderPayload, id: createdOrderId };
 
-      // Oznaka da je napuštena korpa konvertovana u narudžbu
       try {
         await setDoc(doc(db, 'abandoned_carts', cartSessionIdRef.current), {
           status: 'converted',
@@ -288,12 +284,12 @@ export const CheckoutPage: React.FC<{
     return (
       <div className="min-h-[80vh] flex items-center justify-center bg-[#FAF9F5] px-4 py-12 font-['Inter']">
         <div className="max-w-lg w-full bg-white border-2 border-[#0A0A0A] p-6 sm:p-10 text-center space-y-6 shadow-2xl animate-fadeIn">
-          <div className="w-16 h-16 bg-[#F7E97F] border-2 border-black rounded-full flex items-center justify-center mx-auto text-black">
+          <div className="w-16 h-16 bg-[#C4A484] border-2 border-black rounded-full flex items-center justify-center mx-auto text-black">
             <Check className="w-8 h-8 stroke-[3]" />
           </div>
 
           <div className="space-y-1">
-            <span className="text-[10px] font-['Poppins'] font-black uppercase tracking-[0.2em] bg-[#0A0A0A] text-[#F7E97F] px-2.5 py-0.5">
+            <span className="text-[10px] font-['Poppins'] font-black uppercase tracking-[0.2em] bg-[#0A0A0A] text-[#C4A484] px-2.5 py-0.5">
               NARUDŽBA EVIDENTIRANA
             </span>
             <h1 className="font-['Poppins'] text-2xl font-black uppercase text-black pt-2">
@@ -315,7 +311,7 @@ export const CheckoutPage: React.FC<{
             </div>
             <div className="flex justify-between border-b border-neutral-200 pb-2">
               <span className="text-neutral-500">Način preuzimanja:</span>
-              <span className="font-bold text-black">{deliveryMethod === 'pickup' ? 'Lično preuzimanje (Sarajevo)' : 'Brza pošta X Express'}</span>
+              <span className="font-bold text-black">{deliveryMethod === 'pickup' ? 'Lično preuzimanje (Sarajevo)' : 'Premium brza pošta'}</span>
             </div>
             <div className="flex justify-between pt-1 font-['Poppins'] font-black text-sm">
               <span>Iznos za plaćanje:</span>
@@ -329,13 +325,13 @@ export const CheckoutPage: React.FC<{
               <span>Šta se dešava dalje?</span>
             </p>
             <p>
-              Naš tim priprema vaše artikle. Pozvat ćemo vas na navedeni broj telefona radi kratke potvrde adrese prije slanja kuriru.
+              Naš tim pažljivo priprema vaše artikle. Pozvat ćemo vas na navedeni broj telefona radi kratke potvrde adrese prije slanja kuriru.
             </p>
           </div>
 
           <button
             onClick={onNavigateToPage ? () => onNavigateToPage('home') : () => window.location.href = '/'}
-            className="w-full py-3 bg-[#0A0A0A] text-white hover:bg-[#F7E97F] hover:text-[#0A0A0A] font-['Poppins'] text-xs font-black uppercase tracking-wider transition-colors border-2 border-black block text-center cursor-pointer"
+            className="w-full py-3 bg-[#0A0A0A] text-white hover:bg-[#C4A484] hover:text-[#0A0A0A] font-['Poppins'] text-xs font-black uppercase tracking-wider transition-colors border-2 border-black block text-center cursor-pointer"
           >
             Nazad na početnu stranicu
           </button>
@@ -359,9 +355,9 @@ export const CheckoutPage: React.FC<{
           </p>
           <button
             onClick={onNavigateToPage ? () => onNavigateToPage('shop') : () => window.location.href = '/shop'}
-            className="inline-block px-6 py-2.5 bg-[#0A0A0A] text-white hover:bg-[#F7E97F] hover:text-[#0A0A0A] font-['Poppins'] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+            className="inline-block px-6 py-2.5 bg-[#0A0A0A] text-white hover:bg-[#C4A484] hover:text-[#0A0A0A] font-['Poppins'] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
           >
-            Pregledaj artikle →
+            Istraži kolekciju →
           </button>
         </div>
       </div>
@@ -381,8 +377,8 @@ export const CheckoutPage: React.FC<{
             <span>Nazad u trgovinu</span>
           </button>
 
-          <span className="text-[11px] font-['Poppins'] font-black uppercase tracking-[0.2em] bg-[#0A0A0A] text-[#F7E97F] px-2.5 py-1">
-            SIGURAN CHECKOUT
+          <span className="text-[11px] font-['Poppins'] font-black uppercase tracking-[0.2em] bg-[#0A0A0A] text-[#C4A484] px-2.5 py-1">
+            SIGURNA NAPLATA
           </span>
         </div>
 
@@ -415,11 +411,11 @@ export const CheckoutPage: React.FC<{
                     }`}
                   >
                     <div className={`w-4 h-4 rounded-full mt-0.5 border flex items-center justify-center shrink-0 ${deliveryMethod === 'delivery' ? 'border-black bg-black' : 'border-neutral-400'}`}>
-                      {deliveryMethod === 'delivery' && <div className="w-1.5 h-1.5 rounded-full bg-[#F7E97F]" />}
+                      {deliveryMethod === 'delivery' && <div className="w-1.5 h-1.5 rounded-full bg-[#C4A484]" />}
                     </div>
                     <div>
                       <span className="font-['Poppins'] font-bold text-xs uppercase block text-black">
-                        Brza pošta (BiH)
+                        Premium brza pošta (BiH)
                       </span>
                       <span className="text-[11px] text-neutral-500 block mt-0.5">
                         Dostava na vašu adresu (12.00 KM)
@@ -440,7 +436,7 @@ export const CheckoutPage: React.FC<{
                     }`}
                   >
                     <div className={`w-4 h-4 rounded-full mt-0.5 border flex items-center justify-center shrink-0 ${deliveryMethod === 'pickup' ? 'border-black bg-black' : 'border-neutral-400'}`}>
-                      {deliveryMethod === 'pickup' && <div className="w-1.5 h-1.5 rounded-full bg-[#F7E97F]" />}
+                      {deliveryMethod === 'pickup' && <div className="w-1.5 h-1.5 rounded-full bg-[#C4A484]" />}
                     </div>
                     <div>
                       <span className="font-['Poppins'] font-bold text-xs uppercase block text-black">
@@ -651,7 +647,7 @@ export const CheckoutPage: React.FC<{
                   <div className="p-4 bg-[#FAF9F5] border-2 border-black flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="w-4 h-4 rounded-full bg-black flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#F7E97F]" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#C4A484]" />
                       </div>
                       <div>
                         <span className="font-['Poppins'] font-bold text-xs uppercase block text-black">
@@ -738,12 +734,12 @@ export const CheckoutPage: React.FC<{
                     type="text"
                     value={promoCodeInput}
                     onChange={(e) => setPromoCodeInput(e.target.value.toUpperCase())}
-                    placeholder="npr. FIRST100"
+                    placeholder="npr. BOMMIER10"
                     className="flex-1 bg-[#FAF9F5] border-2 border-neutral-300 px-3 py-1.5 text-xs font-mono font-bold uppercase focus:border-black focus:outline-none"
                   />
                   <button
                     type="submit"
-                    className="px-3.5 py-1.5 bg-[#0A0A0A] text-white hover:bg-[#F7E97F] hover:text-[#0A0A0A] text-xs font-['Poppins'] font-bold uppercase transition-colors cursor-pointer"
+                    className="px-3.5 py-1.5 bg-[#0A0A0A] text-white hover:bg-[#C4A484] hover:text-[#0A0A0A] text-xs font-['Poppins'] font-bold uppercase transition-colors cursor-pointer"
                   >
                     Primijeni
                   </button>
@@ -801,7 +797,7 @@ export const CheckoutPage: React.FC<{
                 type="submit"
                 form="checkout-form"
                 disabled={isSubmitting}
-                className="w-full py-4 bg-[#0A0A0A] text-white hover:bg-[#F7E97F] hover:text-[#0A0A0A] font-['Poppins'] text-xs font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 border-2 border-[#0A0A0A] shadow-xl cursor-pointer disabled:opacity-50"
+                className="w-full py-4 bg-[#0A0A0A] text-white hover:bg-[#C4A484] hover:text-[#0A0A0A] font-['Poppins'] text-xs font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 border-2 border-[#0A0A0A] shadow-xl cursor-pointer disabled:opacity-50"
               >
                 <Lock className="w-4 h-4" />
                 <span>{isSubmitting ? 'OBRADA NARUDŽBE...' : 'POTVRDI NARUDŽBU'}</span>
