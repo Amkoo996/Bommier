@@ -1,7 +1,7 @@
 @import "tailwindcss/index.css";
 
 @theme {
-  --color-brand-yellow: #F7E97F;
+  --color-brand-primary: #C4A484; /* Nova Bommier premium boja */
   --color-brand-black: #0A0A0A;
   
   --font-inter: "Inter", sans-serif;
@@ -13,13 +13,14 @@
     scroll-behavior: smooth;
   }
   body {
+    /* Zadržana luksuzna toplo-krem pozadina s oštrim crnim tekstom */
     @apply bg-[#FAF9F5] text-neutral-900 font-['Inter'] antialiased;
   }
 }
 
-/* Prilagođeni scrollbar za e-commerce */
+/* Prilagođeni scrollbar (tanji i elegantniji za premium izgled) */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px; 
 }
 ::-webkit-scrollbar-track {
   background: #FAF9F5;
@@ -29,7 +30,7 @@
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #F7E97F;
+  background: #C4A484; /* Promijenjeno u novu Bommier boju */
 }
 
 /* Animacije korištene u komponentama */
