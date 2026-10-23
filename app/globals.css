@@ -1,8 +1,9 @@
 @import "tailwindcss/index.css";
 
 @theme {
-  --color-brand-primary: #C4A484; /* Nova Bommier premium boja */
-  --color-brand-black: #0A0A0A;
+  /* Zadržat ćemo ovu boju samo za suptilne detalje, ali nećemo njome bojati cijela dugmad */
+  --color-brand-primary: #C4A484; 
+  --color-brand-black: #000000;
   
   --font-inter: "Inter", sans-serif;
   --font-poppins: "Poppins", sans-serif;
@@ -13,31 +14,29 @@
     scroll-behavior: smooth;
   }
   body {
-    /* Zadržana luksuzna toplo-krem pozadina s oštrim crnim tekstom */
-    @apply bg-[#FAF9F5] text-neutral-900 font-['Inter'] antialiased;
+    /* POTPUNO BIJELA POZADINA ZA PREMIUM IZGLED */
+    @apply bg-white text-black font-['Inter'] antialiased;
   }
 }
 
-/* Prilagođeni scrollbar (tanji i elegantniji za premium izgled) */
+/* Izuzetno minimalistički scrollbar */
 ::-webkit-scrollbar {
-  width: 6px; 
+  width: 4px; 
 }
 ::-webkit-scrollbar-track {
-  background: #FAF9F5;
+  background: #FFFFFF;
 }
 ::-webkit-scrollbar-thumb {
-  background: #0A0A0A;
-  border-radius: 4px;
+  background: #E5E5E5;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #C4A484; /* Promijenjeno u novu Bommier boju */
+  background: #000000;
 }
 
-/* Animacije korištene u komponentama */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .animate-fadeIn {
-  animation: fadeIn 0.4s ease-out forwards;
+  animation: fadeIn 0.6s ease-out forwards;
 }

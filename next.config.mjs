@@ -11,10 +11,13 @@ const withPWA = withPWAInit({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // UKLONJENO: output: 'export' 
+  // Razlog: Omogućavamo da Cloudflare Pages pokreće naše API rute (/api/checkout, /api/subscribe)
+  
   images: {
-    unoptimized: true,
+    unoptimized: true, // Ovo mora ostati zbog Cloudflarea
   },
+  
   // Ovo rješava konflikt između PWA paketa i Next.js 16 Turbopack-a
   turbopack: {},
 };

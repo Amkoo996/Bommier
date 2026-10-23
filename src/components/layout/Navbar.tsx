@@ -3,9 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ShoppingBag, Search, Menu, X, Heart, Instagram, ChevronDown } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, User } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
-import { useWishlist } from '../../context/WishlistContext';
 import { CATEGORIES } from '../../types';
 
 export const Navbar = () => {
@@ -15,30 +14,19 @@ export const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const { items, setIsCartOpen, settings } = useCart();
-  
-  const wishlistContext = useWishlist() as any;
-  const wishlistItems = wishlistContext.wishlist || wishlistContext.items || wishlistContext.wishlistItems || [];
-  
   const pathname = usePathname();
   const router = useRouter();
 
   const cartItemCount = items.reduce((sum: number, item: any) => sum + item.quantity, 0);
-  const wishlistItemCount = wishlistItems.length;
 
-  // Zaključavanje skrolanja kada je otvoren mobilni meni
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
+    if (isMobileMenuOpen) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = 'unset';
+    return () => { document.body.style.overflow = 'unset'; };
   }, [isMobileMenuOpen]);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -57,187 +45,92 @@ export const Navbar = () => {
     }
   };
 
-  const navLinks = [
-    { href: '/', label: 'Početna' },
-    { href: '/shop', label: 'Kolekcija' },
-    { href: '/o-nama', label: 'O nama' },
-    { href: '/dostava-i-povrat', label: 'Dostava i Povrat' },
-    { href: '/kontakt', label: 'Kontakt' },
-  ];
-
   const visibleCategories = CATEGORIES.filter((cat) => {
-    const isHidden = settings?.hiddenCategories?.includes(cat);
-    return cat !== 'Rasprodano' && !isHidden;
+    return cat !== 'Rasprodano' && !settings?.hiddenCategories?.includes(cat);
   });
 
   return (
-    <header className={`sticky top-0 z-40 transition-all duration-300 font-['Inter'] ${isScrolled ? 'bg-[#0A0A0A]/95 backdrop-blur-md shadow-2xl border-b border-neutral-800' : 'bg-[#0A0A0A] text-white border-b border-neutral-800'}`}>
+    <header className={`sticky top-0 z-40 transition-all duration-500 bg-white ${isScrolled ? 'shadow-sm' : ''}`}>
       
-      {/* Glavni Meni */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-24 sm:h-28">
+      {/* Vrlo diskretna gornja traka */}
+      <div className="bg-black text-white text-center py-1.5 text-[10px] tracking-[0.2em] font-light uppercase">
+        Besplatna dostava za narudžbe iznad 150 KM
+      </div>
+
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-8">
+        <div className="flex justify-between items-center h-20 sm:h-24">
           
-          {/* LOGO */}
-          <Link href="/" className="flex items-center gap-3.5 group z-50">
-            <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
-              <img 
-                src="/logo.png" 
-                alt="Bommier Wear Logo" 
-                className="w-full h-full object-contain"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  if (e.currentTarget.parentElement) {
-                    e.currentTarget.parentElement.innerHTML = `<span class="font-['Poppins'] font-black text-xs text-[#C4A484] leading-none">BW</span>`;
-                  }
-                }}
-              />
+          {/* LJEVA STRANA: Hamburger za mobitel / Prazno na desktopu radi balansa */}
+          <div className="flex-1 flex items-center justify-start">
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden text-black p-2">
+              {isMobileMenuOpen ? <X className="w-6 h-6 stroke-[1.5]" /> : <Menu className="w-6 h-6 stroke-[1.5]" />}
+            </button>
+            <div className="hidden md:flex gap-8">
+               <Link href="/shop" className="text-xs uppercase tracking-widest text-black hover:text-neutral-500 transition-colors">Kolekcija</Link>
+               <Link href="/o-nama" className="text-xs uppercase tracking-widest text-black hover:text-neutral-500 transition-colors">Brend</Link>
             </div>
-            <div className="flex flex-col justify-center">
-              <span className="font-['Poppins'] text-xl sm:text-2xl font-black tracking-widest text-white leading-none group-hover:text-[#C4A484] transition-colors">
-                BOMMIER <span className="text-[#C4A484] text-sm group-hover:text-white transition-colors">wear</span>
+          </div>
+          
+          {/* CENTAR: Logo - Čist i dominantan */}
+          <div className="flex-shrink-0 flex justify-center items-center">
+            <Link href="/" className="flex flex-col items-center">
+              <span className="font-['Playfair_Display'] text-2xl sm:text-4xl font-bold tracking-[0.2em] text-black">
+                BOMMIER
               </span>
-              <span className="text-[10px] sm:text-[11px] text-neutral-400 font-bold tracking-[0.25em] uppercase mt-1 hidden sm:block">
-                Bezvremenska elegancija
-              </span>
-            </div>
-          </Link>
+              {/* Opcijonalno: možete dodati mali logo ispod ili iznad, ali samo tipografija izgleda jako luksuzno */}
+            </Link>
+          </div>
 
-          {/* Desktop Navigacija */}
-          <nav className="hidden md:flex items-center gap-7">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`relative font-['Poppins'] text-[11px] font-bold uppercase tracking-widest transition-colors py-2 group ${
-                  pathname === link.href ? 'text-[#C4A484]' : 'text-neutral-300 hover:text-white'
-                }`}
-              >
-                {link.label}
-                <span className={`absolute bottom-0 left-0 w-full h-[2px] bg-[#C4A484] transform origin-left transition-transform duration-300 ${pathname === link.href ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
-              </Link>
-            ))}
-
-            {/* Dropdown Kategorije */}
-            <div className="relative group py-6">
-              <Link
-                href="/shop"
-                className={`flex items-center gap-1 font-['Poppins'] text-[11px] font-bold uppercase tracking-widest transition-colors ${
-                  pathname === '/shop' ? 'text-[#C4A484]' : 'text-neutral-300 group-hover:text-white'
-                }`}
-              >
-                <span>Kategorije</span>
-                <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" />
-              </Link>
-
-              <div className="absolute top-[80%] left-1/2 -translate-x-1/2 w-56 bg-[#0A0A0A]/95 backdrop-blur-md border border-neutral-800 shadow-2xl py-3 rounded-b-md z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 pointer-events-none group-hover:pointer-events-auto translate-y-4 group-hover:translate-y-0">
-                {visibleCategories.map((cat) => (
-                  <Link
-                    key={cat}
-                    href={`/shop?category=${encodeURIComponent(cat)}`}
-                    className="block px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-neutral-400 hover:text-[#0A0A0A] hover:bg-[#C4A484] transition-all"
-                  >
-                    {cat}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </nav>
-
-          {/* Ikone */}
-          <div className="flex items-center gap-4 sm:gap-6 z-50">
-            <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="text-neutral-300 hover:text-[#C4A484] hover:scale-110 transition-all cursor-pointer p-1">
-              <Search className="w-4 h-4 sm:w-5 sm:h-5" />
+          {/* DESNA STRANA: Ikone */}
+          <div className="flex-1 flex items-center justify-end gap-5 sm:gap-6">
+            <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="text-black hover:text-neutral-500 transition-colors p-1 hidden sm:block">
+              <Search className="w-5 h-5 stroke-[1.5]" />
             </button>
 
-            {/* INSTAGRAM DM LINK (DESKTOP) - Ažurirano na Bommier */}
-            <a href="https://instagram.com/bommier.wear" target="_blank" rel="noopener noreferrer" className="hidden sm:block text-neutral-300 hover:text-[#C4A484] hover:scale-110 transition-all p-1">
-              <Instagram className="w-4 h-4 sm:w-5 sm:h-5" />
+            <a href="https://instagram.com/bommier.wear" target="_blank" rel="noopener noreferrer" className="text-black hover:text-neutral-500 transition-colors p-1 hidden md:block">
+              <User className="w-5 h-5 stroke-[1.5]" /> {/* Koristimo User ikonu umjesto klasične IG za pročišćen izgled */}
             </a>
-
-            <Link href="/wishlist" className="relative text-neutral-300 hover:text-red-500 transition-all group hidden sm:block p-1 hover:scale-110">
-              <Heart className="w-4 h-4 sm:w-5 sm:h-5 group-hover:fill-red-500" />
-              {wishlistItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-md">
-                  {wishlistItemCount}
-                </span>
-              )}
-            </Link>
 
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 bg-white text-black hover:bg-[#C4A484] rounded-full transition-all cursor-pointer shadow-lg hover:scale-105"
+              className="relative text-black hover:text-neutral-500 transition-colors p-1"
             >
-              <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
+              <ShoppingBag className="w-5 h-5 stroke-[1.5]" />
               {cartItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-black">
+                <span className="absolute -top-1 -right-1 bg-black text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center">
                   {cartItemCount}
                 </span>
               )}
             </button>
-
-            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden text-white hover:text-[#C4A484] cursor-pointer p-1">
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
           </div>
         </div>
 
-        {isSearchOpen && (
-          <div className="absolute top-full left-0 w-full bg-[#0A0A0A]/95 backdrop-blur-md border-b-2 border-[#C4A484] p-5 shadow-xl animate-fadeIn z-30">
-            <form onSubmit={handleSearch} className="max-w-3xl mx-auto flex gap-3">
-              <input
-                type="text"
-                placeholder="Pretražite kolekciju..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                autoFocus
-                className="flex-1 bg-neutral-900 border border-neutral-700 text-white px-5 py-3 text-sm focus:border-[#C4A484] focus:outline-none placeholder-neutral-500 rounded-sm transition-colors"
-              />
-              <button type="submit" className="bg-[#C4A484] text-[#0A0A0A] px-6 py-3 font-['Poppins'] text-xs font-black uppercase tracking-wider cursor-pointer hover:bg-white transition-colors rounded-sm shadow-md">
-                Traži
-              </button>
-            </form>
-          </div>
-        )}
+        {/* Pretraga dropdown - Minimalistički */}
+        <div className={`overflow-hidden transition-all duration-500 ${isSearchOpen ? 'max-h-24 opacity-100 mb-4' : 'max-h-0 opacity-0'}`}>
+          <form onSubmit={handleSearch} className="max-w-2xl mx-auto flex items-center border-b border-black pb-2">
+            <input
+              type="text"
+              placeholder="Pretražite kolekciju"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-1 bg-transparent text-sm px-2 py-2 focus:outline-none placeholder-neutral-400 font-light"
+            />
+            <button type="submit" className="px-4 text-xs uppercase tracking-widest hover:text-neutral-500">Traži</button>
+          </form>
+        </div>
       </div>
 
-      {/* Promo traka ispod navbara */}
-      <div className="bg-[#C4A484] text-[#0A0A0A] text-center py-2 text-[9px] sm:text-[10px] font-['Poppins'] font-black uppercase tracking-[0.2em] shadow-sm">
-        PREMIUM DOSTAVA UNUTAR 48H • SIGURNA KUPOVINA
-      </div>
-
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Apsolutno pročišćen */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-[#0A0A0A] border-b-2 border-[#C4A484] shadow-2xl h-[calc(100vh-80px)] overflow-y-auto z-30">
-          <div className="flex flex-col p-6 space-y-6">
-            <div className="flex flex-col space-y-4 border-b border-neutral-800 pb-6">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href} href={link.href}
-                  className={`font-['Poppins'] text-sm font-bold uppercase tracking-widest ${pathname === link.href ? 'text-[#C4A484]' : 'text-white'}`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-
-            <div className="space-y-4 pb-6 border-b border-neutral-800">
-              <h3 className="font-['Poppins'] text-[10px] text-neutral-500 font-bold uppercase tracking-widest mb-2">Kategorije</h3>
-              {visibleCategories.map((cat) => (
-                <Link key={cat} href={`/shop?category=${encodeURIComponent(cat)}`} className="block font-['Poppins'] text-sm font-bold text-neutral-300 uppercase tracking-widest hover:text-[#C4A484]">
-                  {cat}
-                </Link>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <Link href="/wishlist" className="flex flex-col items-center justify-center gap-2 text-white text-[10px] font-bold uppercase bg-neutral-900 p-4 rounded-sm border border-neutral-800 hover:border-red-500 transition-colors">
-                <Heart className="w-5 h-5 text-red-500" />Lista želja ({wishlistItemCount})
-              </Link>
-              {/* INSTAGRAM DM LINK (MOBILE) - Ažurirano na Bommier */}
-              <a href="https://instagram.com/bommier.wear" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center gap-2 text-white text-[10px] font-bold uppercase bg-neutral-900 p-4 rounded-sm border border-neutral-800 hover:border-pink-500 transition-colors">
-                <Instagram className="w-5 h-5 text-pink-500" />Instagram
-              </a>
-            </div>
+        <div className="md:hidden fixed inset-0 top-[100px] bg-white z-30 flex flex-col p-8">
+          <div className="flex flex-col space-y-8 text-center mt-10">
+            <Link href="/" className="text-xl font-light uppercase tracking-widest text-black">Početna</Link>
+            <Link href="/shop" className="text-xl font-light uppercase tracking-widest text-black">Nova Kolekcija</Link>
+            <Link href="/o-nama" className="text-xl font-light uppercase tracking-widest text-black">O Brendu</Link>
+            <Link href="/kontakt" className="text-xl font-light uppercase tracking-widest text-black">Korisnička Podrška</Link>
+          </div>
+          <div className="mt-auto pb-10 text-center flex justify-center gap-8">
+            <a href="https://instagram.com/bommier.wear" className="text-sm font-light tracking-widest uppercase border-b border-black pb-1">Instagram</a>
           </div>
         </div>
       )}

@@ -6,38 +6,29 @@ import './globals.css';
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export const viewport: Viewport = {
-  themeColor: '#0A0A0A',
+  themeColor: '#FFFFFF',
   width: 'device-width',
   initialScale: 1,
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://bommier.ba'), // Zamijenite sa stvarnom domenom
-  title: 'Bommier Wear • Bezvremenska elegancija',
-  description: 'Ekskluzivni komadi beskompromisnog dizajna. Definicija modernog luksuza i premium kvalitete.',
+  metadataBase: new URL('https://bommier.pages.dev'),
+  title: 'BOMMIER WEAR',
+  description: 'Otkrijte novu kolekciju luksuzne odjeće. Beskompromisan dizajn i bezvremenska elegancija.',
   manifest: '/manifest.json',
   icons: {
-    icon: [
-      { url: '/logo.png', sizes: 'any', type: 'image/png' },
-    ],
+    icon: [{ url: '/logo.png', sizes: 'any', type: 'image/png' }],
     shortcut: '/logo.png',
-    apple: [
-      { url: '/logo.png', sizes: '180x180', type: 'image/png' },
-    ],
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'black-translucent',
-    title: 'Bommier Wear',
+    apple: [{ url: '/logo.png', sizes: '180x180', type: 'image/png' }],
   },
   openGraph: {
-    title: 'Bommier Wear • Bezvremenska elegancija',
-    description: 'Ekskluzivni komadi beskompromisnog dizajna. Definicija modernog luksuza i premium kvalitete.',
-    url: 'https://bommier.ba',
-    siteName: 'Bommier Wear',
+    title: 'BOMMIER WEAR',
+    description: 'Otkrijte novu kolekciju luksuzne odjeće.',
+    url: 'https://bommier.pages.dev',
+    siteName: 'BOMMIER WEAR',
     images: [
       {
-        url: '/images/seo-cover.webp', // Obavezno zamijeniti sliku u folderu novom premium fotografijom
+        url: '/images/seo-cover.webp',
         width: 1200,
         height: 630,
         alt: 'Bommier Wear Kolekcija',
@@ -48,8 +39,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Bommier Wear • Bezvremenska elegancija',
-    description: 'Ekskluzivni komadi beskompromisnog dizajna. Definicija modernog luksuza i premium kvalitete.',
+    title: 'BOMMIER WEAR',
+    description: 'Otkrijte novu kolekciju luksuzne odjeće.',
     images: ['/images/seo-cover.webp'],
   },
 };
@@ -64,25 +55,21 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Fontovi zadržani za sada, možemo ih promijeniti u globals.css ili ovdje ako želite serifni font */}
+        {/* Dodajemo jako tanke (Light 300) i normalne fontove za elegantan, "high-end" osjećaj */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@700;800;900&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;600;700&display=swap"
         />
       </head>
-      <body className="bg-[#FAF9F5] text-neutral-900 antialiased font-['Inter']">
+      {/* Čista, potpuno bijela pozadina */}
+      <body className="bg-white text-black antialiased font-['Inter']">
         
-        {/* GOOGLE ANALYTICS INTEGRACIJA SA CONSENT MODE */}
         {GA_MEASUREMENT_ID && (
           <>
-            <Script
-              id="google-consent-init"
-              strategy="beforeInteractive"
-            >
+            <Script id="google-consent-init" strategy="beforeInteractive">
               {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
-                
                 gtag('consent', 'default', {
                   'analytics_storage': 'denied',
                   'ad_storage': 'denied',
@@ -90,7 +77,6 @@ export default function RootLayout({
                   'ad_personalization': 'denied',
                   'wait_for_update': 500
                 });
-
                 gtag('js', new Date());
                 gtag('config', '${GA_MEASUREMENT_ID}', {
                   page_path: window.location.pathname,

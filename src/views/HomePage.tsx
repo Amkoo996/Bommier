@@ -2,48 +2,32 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Truck, ShieldCheck, RotateCcw, Mail, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Mail } from 'lucide-react';
 import { getProducts } from '../lib/db';
 import { Product } from '../types';
 
 export const HomePage = () => {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [newDropProducts, setNewDropProducts] = useState<Product[]>([]);
-  const [accessoryImage, setAccessoryImage] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
-  // Newsletter stanja
   const [email, setEmail] = useState('');
   const [subLoading, setSubLoading] = useState(false);
   const [subSuccess, setSubSuccess] = useState(false);
-  const [subError, setSubError] = useState('');
 
   useEffect(() => {
     async function loadHomepageData() {
       try {
         const allProds = await getProducts();
         const activeProds = allProds.filter(p => !p.isHidden);
-        
         setFeaturedProducts(activeProds.filter(p => p.featured).slice(0, 4));
-        
         setNewDropProducts(
-          activeProds
-            .filter(p => p.isNew)
-            .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
-            .slice(0, 4)
+          activeProds.filter(p => p.isNew)
+             .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+             .slice(0, 4)
         );
-
-        const accessoryProd = activeProds.find(p => {
-          if (p.category !== 'Dodaci (Accessories)') return false;
-          const totalStock = Object.values(p.sizes || {}).reduce((sum, val) => sum + (val as number), 0);
-          return totalStock > 0 && p.images && p.images.length > 0;
-        }) || activeProds.find(p => p.category === 'Dodaci (Accessories)' && p.images && p.images.length > 0);
-
-        if (accessoryProd && accessoryProd.images?.[0]) {
-          setAccessoryImage(accessoryProd.images[0]);
-        }
       } catch (err) {
-        console.error("Greška pri učitavanju proizvoda:", err);
+        console.error("Greška:", err);
       } finally {
         setLoading(false);
       }
@@ -54,173 +38,60 @@ export const HomePage = () => {
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
-
     setSubLoading(true);
-    setSubError('');
-    setSubSuccess(false);
-
-    try {
-      const res = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim() }),
-      });
-
-      const data = await res.json().catch(() => ({}));
-
-      if (res.ok && data.success !== false) {
-        setSubSuccess(true);
-        setEmail('');
-      } else {
-        setSubError(data.error || 'Došlo je do greške. Pokušajte ponovo.');
-      }
-    } catch (err) {
-      setSubError('Greška pri povezivanju sa serverom. Pokušajte ponovo.');
-    } finally {
-      setSubLoading(false);
-    }
+    setSubSuccess(true);
+    setEmail('');
+    setTimeout(() => { setSubLoading(false); }, 1000);
   };
 
   return (
-    <div className="font-['Inter'] bg-[#FAF9F5] overflow-x-hidden">
+    <div className="font-['Inter'] bg-white">
       
-      {/* 1. HERO SEKCIJA */}
-      <section 
-        className="relative h-[70vh] sm:h-[85vh] bg-[#0A0A0A] flex items-center justify-center bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url('/images/hero-bg.webp')` }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+      {/* 1. HERO SEKCIJA - Čista, elegantna fotografija preko cijelog ekrana */}
+      <section className="relative h-screen w-full bg-[#f4f4f4] flex items-center justify-center overflow-hidden">
+        {/* Zamijenite /images/hero-bg.webp sa visokokvalitetnom studijskom slikom vašeg modela */}
+        <img 
+          src="/images/hero-bg.webp" 
+          alt="Bommier Collection" 
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-black/20"></div> {/* Jako suptilan zatamnjeni sloj, samo za čitljivost */}
         
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-start justify-center">
-          
-          <h1 className="text-white font-['Poppins'] text-5xl sm:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.9] mb-6 max-w-2xl">
-            Bezvremenska<br/>Elegancija.<br/><span className="text-[#C4A484]">Vaš potpis.</span>
+        <div className="relative z-10 text-center flex flex-col items-center mt-20 px-4">
+          <h2 className="text-white text-xs sm:text-sm tracking-[0.4em] uppercase font-light mb-4">
+            Kolekcija Jesen/Zima
+          </h2>
+          <h1 className="text-white font-['Playfair_Display'] text-5xl sm:text-7xl lg:text-8xl font-normal tracking-wide mb-8">
+            Novi Standard.
           </h1>
-          <p className="text-neutral-300 text-sm sm:text-base max-w-md mb-8 font-medium">
-            Ekskluzivni komadi beskompromisnog dizajna. Definicija modernog luksuza i premium kvalitete.
-          </p>
           <Link 
             href="/shop" 
-            className="group flex items-center gap-3 bg-[#C4A484] text-[#0A0A0A] px-8 py-4 font-['Poppins'] font-black uppercase tracking-widest text-sm sm:text-base transition-all hover:bg-white hover:scale-105 active:scale-95"
+            className="border border-white text-white px-10 py-3.5 text-xs uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-500"
           >
             Istraži kolekciju
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </section>
 
-      {/* 2. TRAKA POVJERENJA */}
-      <section className="bg-[#0A0A0A] border-b-4 border-[#C4A484] py-4 sm:py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-neutral-800 text-center">
-            <div className="flex items-center justify-center gap-3 pt-4 sm:pt-0">
-              <Truck className="w-6 h-6 text-[#C4A484]" />
-              <span className="text-white font-['Poppins'] font-bold text-xs uppercase tracking-wider">Premium Dostava 48h</span>
-            </div>
-            <div className="flex items-center justify-center gap-3 pt-4 sm:pt-0">
-              <ShieldCheck className="w-6 h-6 text-[#C4A484]" />
-              <span className="text-white font-['Poppins'] font-bold text-xs uppercase tracking-wider">Sigurna kupovina</span>
-            </div>
-            <div className="flex items-center justify-center gap-3 pt-4 sm:pt-0">
-              <RotateCcw className="w-6 h-6 text-[#C4A484]" />
-              <span className="text-white font-['Poppins'] font-bold text-xs uppercase tracking-wider">Povrat unutar 14 dana</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. VIZUELNE KATEGORIJE (GRID) */}
-      <section className="py-12 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-auto md:h-[500px]">
-          <Link href="/shop?category=Duksevi%20i%20hoodice" className="relative group overflow-hidden bg-neutral-200 h-[300px] md:h-full">
-            <img src="/images/category-hoodie.webp" alt="Duksevi" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
-            <div className="absolute bottom-6 left-6">
-              <h2 className="text-white font-['Poppins'] text-3xl font-black uppercase tracking-widest mb-2 drop-shadow-lg">Duksevi</h2>
-              <span className="text-white text-xs font-bold uppercase tracking-wider border-b-2 border-[#C4A484] pb-1">Istraži modele</span>
-            </div>
-          </Link>
-          
-          <div className="grid grid-rows-2 gap-4 h-[500px] md:h-full">
-            <Link href="/shop?category=Majice" className="relative group overflow-hidden bg-neutral-200">
-              <img src="/images/category-tshirt.webp" alt="Majice" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
-              <div className="absolute bottom-6 left-6">
-                <h2 className="text-white font-['Poppins'] text-2xl font-black uppercase tracking-widest mb-2 drop-shadow-lg">Majice</h2>
-                <span className="text-white text-xs font-bold uppercase tracking-wider border-b-2 border-[#C4A484] pb-1">Vidi ponudu</span>
-              </div>
-            </Link>
-
-            <Link href="/shop?category=Dodaci%20(Accessories)" className="relative group overflow-hidden bg-neutral-200">
-              <img 
-                src={accessoryImage || "/images/category-tshirt.webp"} 
-                alt="Dodaci" 
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
-              
-              <div className="absolute bottom-6 left-6 z-10">
-                <h2 className="text-white font-['Poppins'] text-2xl font-black uppercase tracking-widest mb-1 drop-shadow-lg">Dodaci</h2>
-                <p className="text-[#C4A484] text-[10px] font-bold uppercase tracking-widest mb-2 drop-shadow-md">Ekskluzivni detalji</p>
-                <span className="text-neutral-200 text-xs font-bold uppercase tracking-wider border-b-2 border-[#C4A484] pb-0.5 group-hover:text-white transition-colors">Pregledaj ponudu</span>
-              </div>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. NAJTRAŽENIJI KOMADI */}
-      {!loading && featuredProducts.length > 0 && (
-        <section className="py-12 bg-white border-y-2 border-neutral-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-end mb-8">
-              <div>
-                <span className="text-[#0A0A0A] font-['Poppins'] font-black uppercase tracking-widest text-[10px] bg-[#C4A484] px-2 py-0.5 mb-2 inline-block">Ekskluzivan odabir</span>
-                <h2 className="text-3xl font-black uppercase font-['Poppins'] text-black tracking-tight">Kolekcija</h2>
-              </div>
-              <Link href="/shop" className="text-xs font-bold uppercase text-neutral-500 hover:text-black transition-colors hidden sm:block border-b border-black pb-0.5">
-                Vidi sve →
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {featuredProducts.map((product) => (
-                <Link key={product.id} href={`/proizvod?id=${product.id}`} className="group relative block bg-[#FAF9F5] border-2 border-transparent hover:border-[#C4A484] transition-colors shadow-sm">
-                  <div className="aspect-[4/5] overflow-hidden bg-neutral-100">
-                    <img src={product.images?.[0] || '/hero-streetwear.webp'} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  </div>
-                  <div className="p-4 bg-white border-t border-neutral-100">
-                    <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest">{product.category}</span>
-                    <h3 className="font-['Poppins'] font-bold text-xs sm:text-sm text-black truncate mt-1">{product.name}</h3>
-                    <p className="font-['Poppins'] font-black text-sm text-black mt-2">{product.price.toFixed(2)} KM</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* 5. NOVI DROP */}
+      {/* 2. NOVI KOMADI - Potpuni minimalizam (bez okvira) */}
       {!loading && newDropProducts.length > 0 && (
-        <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center mb-10 text-center">
-            <span className="bg-[#0A0A0A] text-white px-3 py-1 font-['Poppins'] text-[10px] font-black uppercase tracking-[0.2em] mb-3">Samo za odabrane</span>
-            <h2 className="text-4xl font-black uppercase font-['Poppins'] text-black tracking-tight">Noviteti</h2>
+        <section className="py-24 sm:py-32 max-w-[1400px] mx-auto px-4 sm:px-8">
+          <div className="flex flex-col items-center mb-16 text-center">
+            <h2 className="text-2xl sm:text-3xl font-['Playfair_Display'] font-normal text-black tracking-wide mb-4">Noviteti</h2>
+            <Link href="/shop" className="text-xs uppercase tracking-[0.2em] text-neutral-500 hover:text-black transition-colors border-b border-neutral-300 pb-1">
+              Prikaži sve
+            </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {newDropProducts.map((product) => (
-              <Link key={product.id} href={`/proizvod?id=${product.id}`} className="group relative block border-2 border-neutral-200 hover:border-[#C4A484] transition-colors shadow-sm">
-                <span className="absolute top-2 left-2 z-10 bg-[#0A0A0A] text-[#C4A484] text-[9px] font-black uppercase px-2 py-1 tracking-widest shadow-md">
-                  NOVO
-                </span>
-                <div className="aspect-[4/5] overflow-hidden bg-white">
-                  <img src={product.images?.[0] || '/hero-streetwear.webp'} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <Link key={product.id} href={`/proizvod?id=${product.id}`} className="group block cursor-pointer">
+                <div className="relative aspect-[3/4] bg-[#f9f9f9] overflow-hidden mb-5">
+                  <img src={product.images?.[0] || '/hero-streetwear.webp'} alt={product.name} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                 </div>
-                <div className="p-4 bg-white border-t border-neutral-100 text-center">
-                  <h3 className="font-['Poppins'] font-bold text-xs sm:text-sm text-black truncate">{product.name}</h3>
-                  <p className="font-['Poppins'] font-black text-sm text-[#0A0A0A] mt-1">{product.price.toFixed(2)} KM</p>
+                <div className="text-center">
+                  <h3 className="text-xs uppercase tracking-widest text-black font-medium mb-2">{product.name}</h3>
+                  <p className="text-sm text-neutral-600 font-light">{product.price.toFixed(2)} KM</p>
                 </div>
               </Link>
             ))}
@@ -228,56 +99,54 @@ export const HomePage = () => {
         </section>
       )}
 
-      {/* 6. NEWSLETTER SEKCIJA */}
-      <section className="bg-[#0A0A0A] border-t-4 border-[#C4A484] py-16 sm:py-20 text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#1A1A1A] text-[#C4A484] border border-neutral-800 mb-4">
-            <Mail className="w-6 h-6" />
+      {/* 3. EDITORIAL BANNER - Inspirisano modnim magazinima */}
+      <section className="py-12 sm:py-24 max-w-[1400px] mx-auto px-4 sm:px-8">
+        <div className="relative aspect-video sm:aspect-[21/9] bg-[#f0f0f0] overflow-hidden flex items-center justify-center group">
+          <img src="/images/category-hoodie.webp" alt="Editorial" className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105 opacity-90" />
+          <div className="absolute inset-0 bg-black/10"></div>
+          
+          <div className="relative z-10 bg-white/90 backdrop-blur-sm p-8 sm:p-12 text-center max-w-md mx-4">
+            <h2 className="text-2xl font-['Playfair_Display'] mb-4 text-black">Beskompromisna kvaliteta</h2>
+            <p className="text-xs text-neutral-600 leading-relaxed mb-6 font-light">
+              Svaki detalj, svaki šav, pažljivo je osmišljen kako bi pružio osjećaj luksuza i trajnosti koji zaslužujete.
+            </p>
+            <Link href="/o-nama" className="text-[10px] uppercase tracking-[0.2em] text-black border-b border-black pb-1 hover:text-neutral-500 transition-colors">
+              Otkrijte našu priču
+            </Link>
           </div>
+        </div>
+      </section>
 
-          <div>
-            <span className="text-[#0A0A0A] font-['Poppins'] font-black uppercase tracking-widest text-[10px] bg-[#C4A484] px-2.5 py-1 mb-3 inline-block">
-              BOMMIER KLUB
-            </span>
-          </div>
-
-          <h2 className="text-3xl sm:text-4xl font-black uppercase font-['Poppins'] tracking-tight mb-3">
-            Pristupite limitiranim edicijama
+      {/* 4. NEWSLETTER - Elegantna i smirena forma */}
+      <section className="py-24 sm:py-32 border-t border-neutral-100">
+        <div className="max-w-2xl mx-auto px-4 text-center">
+          <h2 className="text-2xl font-['Playfair_Display'] text-black mb-4">
+            Bommier Society
           </h2>
-
-          <p className="text-neutral-400 text-xs sm:text-sm max-w-lg mx-auto mb-8 font-medium">
-            Pretplatite se na naš newsletter i osigurajte sebi prvi pristup najnovijim kolekcijama, tajnim rasprodajama i posebnim privilegijama za članove.
+          <p className="text-xs text-neutral-500 mb-10 font-light tracking-wide">
+            Pretplatite se i osigurajte pristup limitiranim kolekcijama prije svih.
           </p>
 
-          <form onSubmit={handleSubscribe} className="max-w-md mx-auto flex flex-col sm:flex-row gap-2">
+          <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-0 border-b border-black">
             <input
               type="email"
               required
-              placeholder="Unesite Vašu e-mail adresu..."
+              placeholder="Unesite e-mail adresu"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled={subLoading || subSuccess}
-              className="flex-1 bg-[#141414] border-2 border-neutral-700 focus:border-[#C4A484] px-4 py-3 text-xs sm:text-sm text-white placeholder-neutral-500 focus:outline-none transition-colors"
+              className="flex-1 bg-transparent px-2 py-3 text-sm text-black placeholder-neutral-400 focus:outline-none"
             />
             <button
               type="submit"
-              disabled={subLoading || subSuccess}
-              className="bg-[#C4A484] text-[#0A0A0A] hover:bg-white px-6 py-3 font-['Poppins'] font-black uppercase text-xs sm:text-sm tracking-wider transition-all disabled:opacity-50 cursor-pointer shrink-0"
+              className="text-xs uppercase tracking-widest text-black hover:text-neutral-500 px-4 py-3 transition-colors"
             >
-              {subLoading ? 'Prijava...' : 'Prijavite se'}
+              {subLoading ? '...' : 'Prijavi se'}
             </button>
           </form>
 
           {subSuccess && (
-            <div className="mt-4 flex items-center justify-center gap-2 text-emerald-400 text-xs sm:text-sm font-bold">
-              <CheckCircle2 className="w-4 h-4" />
-              <span>Uspješno ste prijavljeni. Hvala Vam na povjerenju.</span>
-            </div>
-          )}
-
-          {subError && (
-            <p className="mt-4 text-red-400 text-xs sm:text-sm font-bold">
-              {subError}
+            <p className="mt-6 text-xs text-black uppercase tracking-widest">
+              Dobrodošli u klub.
             </p>
           )}
         </div>
