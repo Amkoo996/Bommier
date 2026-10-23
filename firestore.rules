@@ -1,0 +1,152 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.uid == 'Jt35lHyxq1feiEyi1exOKRA9xJl2' || 
+        request.auth.uid == 'NSgdcTOFwXRW3nVfHa9mvgfXsDC3' || 
+        request.auth.token.admin == true
+      );
+    }
+
+    function validSizes() {
+      return ['S', 'M', 'L', 'XL', 'XXL', '3XL', 'One size'];
+    }
+
+    function sizeOk(s) {
+      return !(s in request.resource.data.sizes) || (
+        !(s in resource.data.sizes) || (
+          request.resource.data.sizes[s] is int &&
+          request.resource.data.sizes[s] >= 0 &&
+          request.resource.data.sizes[s] <= resource.data.sizes[s]
+        )
+      );
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['sizes']) &&
+        request.resource.data.sizes.keys().hasOnly(validSizes()) &&
+        sizeOk('S') && sizeOk('M') && sizeOk('L') && sizeOk('XL') &&
+        sizeOk('XXL') && sizeOk('3XL') && sizeOk('One size')
+      );
+    }
+
+    match /orders/{orderId} {
+      allow create: if request.resource.data.keys().hasOnly([
+        'id', 'orderNumber', 'items', 'customer', 'subtotal', 'shippingFee', 
+        'total', 'paymentMethod', 'status', 'createdAt', 'promoCode', 'discountAmount'
+      ]) && request.resource.data.status == 'Nova'
+         && request.resource.data.total is number
+         && request.resource.data.total > 0
+         && request.resource.data.items is list
+         && request.resource.data.items.size() >= 1
+         && request.resource.data.items.size() <= 20;
+
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /order_tracking/{orderNumber} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow create: if existsAfter(/databases/$(database)/documents/orders/$(orderNumber))
+                    && request.resource.data.keys().hasOnly(['orderNumber', 'status', 'createdAt'])
+                    && request.resource.data.status == 'Nova';
+      allow update, delete: if isAdmin();
+    }
+
+    match /promo_codes/{codeId} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow create, delete: if isAdmin();
+      
+      allow update: if isAdmin() || (
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['usageCount', 'usedAt', 'used', 'active']) &&
+        request.resource.data.usageCount == resource.data.get('usageCount', 0) + 1 &&
+        request.resource.data.get('active', false) <= resource.data.get('active', false) &&
+        request.resource.data.get('used', false) >= resource.data.get('used', false)
+      );
+    }
+
+    match /abandoned_carts/{cartId} {
+      allow create, update: if request.resource.data.keys().hasOnly([
+        'customerName', 'phone', 'email', 'city', 'address', 'deliveryMethod', 
+        'items', 'itemsSummary', 'total', 'updatedAt', 'status'
+      ]) && request.resource.data.items is list
+         && request.resource.data.items.size() <= 20;
+         
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /analytics_events/{eventId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /product_stats/{statId} {
+      allow read: if true;
+      allow create, update: if request.resource.data.keys().hasOnly(['productId', 'viewsCount', 'lastViewedAt']);
+      allow delete: if isAdmin();
+    }
+
+    match /store_metrics/{metricId} {
+      allow read, delete: if isAdmin();
+      allow create, update: if request.resource.data.keys().hasOnly([
+        'totalVisits', 'productViews', 'addToCartCount', 'checkoutStarts', 'completedPurchases'
+      ]);
+    }
+    
+    // NOVO: Dodana pravila za brisanje pregleda iz Admin Dashboarda
+    match /product_views/{viewId} {
+      allow read, create, update: if true;
+      allow delete: if isAdmin();
+    }
+    
+    match /views/{viewId} {
+      allow read, create, update: if true;
+      allow delete: if isAdmin();
+    }
+
+    match /contact_messages/{messageId} {
+      allow create: if request.resource.data.keys().hasOnly([
+        'name', 'email', 'phone', 'message', 'createdAt', 'read'
+      ]) && request.resource.data.message is string
+         && request.resource.data.message.size() <= 2000;
+
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /subscribers/{email} {
+      allow create: if request.resource.data.keys().hasOnly([
+        'email', 'subscribedAt', 'createdAt', 'consent'
+      ]) && request.resource.data.email is string
+         && request.resource.data.email.size() <= 100;
+
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly([
+        'productId', 'author', 'userName', 'rating', 'comment', 'createdAt'
+      ]) && request.resource.data.rating is int
+         && request.resource.data.rating >= 1
+         && request.resource.data.rating <= 5
+         && request.resource.data.comment is string
+         && request.resource.data.comment.size() <= 1000
+         && request.resource.data.author is string
+         && request.resource.data.author.size() <= 60;
+
+      allow update, delete: if isAdmin();
+    }
+
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+  }
+}

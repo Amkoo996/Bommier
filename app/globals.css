@@ -1,0 +1,42 @@
+@import "tailwindcss/index.css";
+
+@theme {
+  --color-brand-yellow: #F7E97F;
+  --color-brand-black: #0A0A0A;
+  
+  --font-inter: "Inter", sans-serif;
+  --font-poppins: "Poppins", sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-[#FAF9F5] text-neutral-900 font-['Inter'] antialiased;
+  }
+}
+
+/* Prilagođeni scrollbar za e-commerce */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF9F5;
+}
+::-webkit-scrollbar-thumb {
+  background: #0A0A0A;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #F7E97F;
+}
+
+/* Animacije korištene u komponentama */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out forwards;
+}
